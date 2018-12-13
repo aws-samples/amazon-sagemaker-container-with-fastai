@@ -8,7 +8,7 @@ Since the fast.ai library is based on PyTorch, this project builds upon the [Sag
 
 [Amazon SageMaker](https://aws.amazon.com/documentation/sagemaker/) utilizes Docker containers to run all training jobs & inference endpoints. Make sure you have installed [Docker](https://www.docker.com/>) on your development machine in order to build the necessary Docker images.
 
-The Docker images are built from the [following Dockerfile](https://github.com/aws-samples/amazon-sagemaker-container-with-fastai/tree/master/Dockerfile>).
+The Docker images are built from the [following Dockerfile](https://github.com/aws-samples/amazon-sagemaker-container-with-fastai/tree/master/Dockerfile).
 
 We have a utility script that builds 2 Docker images, a GPU based image and a CPU based image, on your machine locally and pushes them to your ECR repository.
 
