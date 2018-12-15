@@ -9,7 +9,7 @@ IMAGE="sagemaker-fastai"
 
 # input parameters
 FASTAI_VERSION=${1:-1.0}
-PY_VERSION=${2:-py37}
+PY_VERSION=${2:-py36}
 
 # Get the account number associated with the current IAM credentials
 account=$(aws sts get-caller-identity --query Account --output text)
@@ -35,21 +35,16 @@ fi
 # Get the login command from ECR and execute it directly
 $(aws ecr get-login --region ${region} --no-include-email)
 
+# Get the login command from ECR in order to pull down the SageMaker PyTorch image
+$(aws ecr get-login --registry-ids 520713654638 --region ${region} --no-include-email)
+
 # loop for each architecture (cpu & gpu)
 for arch in gpu cpu
-do
-    if [ "$arch" = "gpu" ]; then 
-        BASE_IMAGE="nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04"
-        PYTORCH_PACKAGE="torch"
-    else 
-        BASE_IMAGE="ubuntu:16.04"
-        PYTORCH_PACKAGE="http://download.pytorch.org/whl/cpu/torch-1.0.0-cp${PY_VERSION:2:2}-cp${PY_VERSION:2:2}m-linux_x86_64.whl"
-    fi 
-    
-    echo "Building image with baseimage=${BASE_IMAGE}, python_version=${PY_VERSION}, pytorch_package=${PYTORCH_PACKAGE}"
+do  
+    echo "Building image with arch=${arch}, region=${region}"
     TAG="${FASTAI_VERSION}-${arch}-${PY_VERSION}"
     FULLNAME="${account}.dkr.ecr.${region}.amazonaws.com/${IMAGE}:${TAG}"
-    docker build -t ${IMAGE}:${TAG} --build-arg PYTHON_VERSION="${PY_VERSION:2:1}.${PY_VERSION:3:1}"  --build-arg PYTORCH_PACKAGE="${PYTORCH_PACKAGE}" --build-arg BASE_IMAGE="${BASE_IMAGE}" .
+    docker build -t ${IMAGE}:${TAG} --build-arg ARCH="$arch"  --build-arg REGION="${region}"  .
     docker tag ${IMAGE}:${TAG} ${FULLNAME}
-    docker push ${FULLNAME}
+    #docker push ${FULLNAME}
 done
