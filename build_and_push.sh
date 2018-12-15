@@ -7,9 +7,9 @@
 # machine and combined with the account and region to form the repository name for ECR.
 IMAGE="sagemaker-fastai"
 
-# input parameters
-FASTAI_VERSION=${1:-1.0}
-PY_VERSION=${2:-py36}
+# parameters
+FASTAI_VERSION="1.0"
+PY_VERSION="py36"
 
 # Get the account number associated with the current IAM credentials
 account=$(aws sts get-caller-identity --query Account --output text)
