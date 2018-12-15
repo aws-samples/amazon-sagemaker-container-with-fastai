@@ -46,5 +46,5 @@ do
     FULLNAME="${account}.dkr.ecr.${region}.amazonaws.com/${IMAGE}:${TAG}"
     docker build -t ${IMAGE}:${TAG} --build-arg ARCH="$arch"  --build-arg REGION="${region}"  .
     docker tag ${IMAGE}:${TAG} ${FULLNAME}
-    #docker push ${FULLNAME}
+    docker push ${FULLNAME}
 done
